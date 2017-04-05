@@ -42,9 +42,10 @@ class euler(telepot.helper.ChatHandler):
 			output_lang = self.ENGLISH
 		elif re.match(u'[\u0061-\u007a\u0041-\u005a]+', sentence) is not None:
 			input_lang = self.ENGLISH
-		elif re.match(u'[\u3040-\u309F\u30A0-\u30FF]+', sentence) is not None or re.match(u'[\u2E80-\u2EFF\u31C0-\u31EF\u3200-\u32FF\u3400-\u4DBF\u4E00-\u9FBF\uF900-\uFAFF\u20000-\u2A6DF\u2F800-\u2FA1F]+', sentence) is not None:
-			input_lang = self.JAPANESE
-			if re.match(u'[\u2E80-\u2EFF\u31C0-\u31EF\u3200-\u32FF\u3400-\u4DBF\u4E00-\u9FBF\uF900-\uFAFF\u20000-\u2A6DF\u2F800-\u2FA1F]+', sentence) is not None and re.match(u'[\u3040-\u309F\u30A0-\u30FF]+', sentence) is None:
+		elif re.match(u'[\u2E80-\u2EFF\u31C0-\u31EF\u3200-\u32FF\u3400-\u4DBF\u4E00-\u9FBF\uF900-\uFAFF\u20000-\u2A6DF\u2F800-\u2FA1F]+', sentence) is not None:
+			if re.search(u'[\u3040-\u309F\u30A0-\u30FF]+', sentence) is not None:
+				input_lang = self.JAPANESE
+			else:
 				input_lang = self.CHINESE
 
 		encText = urllib.parse.quote(sentence)
