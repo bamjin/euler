@@ -17,14 +17,11 @@ from urllib import parse
 from apscheduler.schedulers.background import BackgroundScheduler
 from telepot.delegate import per_chat_id, create_open, pave_event_space
 
-
-
 CONFIG_FILE = 'setting.json'
 
 class euler(telepot.helper.ChatHandler):
 
 	GREETING = "번역해드립니다."
-	MENU0 = '홈으로'
 	KOREAN = 'ko'
 	JAPANESE = 'ja'
 	ENGLISH = 'en'
@@ -49,6 +46,8 @@ class euler(telepot.helper.ChatHandler):
 			input_lang = self.JAPANESE
 			if re.match(u'[\u2E80-\u2EFF\u31C0-\u31EF\u3200-\u32FF\u3400-\u4DBF\u4E00-\u9FBF\uF900-\uFAFF\u20000-\u2A6DF\u2F800-\u2FA1F]+', sentence) is not None and re.match(u'[\u3040-\u309F\u30A0-\u30FF]+', sentence) is None:
 				input_lang = self.CHINESE
+		else:
+			self.sender.sendMessage('지원하지 않는 언어입니다!')
 
 		encText = urllib.parse.quote(sentence)
 		data = "source=" + input_lang + "&target=" + output_lang + "&text=" + encText
@@ -86,7 +85,6 @@ def getConfig(config):
 	global client_id
 	global client_secret
 
-	_maxNumRetries = 10
 	TOKEN = config['common']['token']
 	client_id = config['common']['id']
 	client_secret = config['common']['key']
