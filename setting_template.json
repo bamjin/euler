@@ -1,0 +1,7 @@
+{
+  "common": {
+    "token": "123456789:blahblahTelegramBotToken",
+    "id": "API_ID",
+    "key": "API_SECRET_KEY"
+    }
+}
