@@ -71,6 +71,7 @@ class euler(telepot.helper.ChatHandler):
 			self.menu()
 		else:
 		    print("Error Code:" + rescode)
+
 	def handle_command(self, command):
 		if self.mode == self.MENU0:
 			if command == self.MENU1:
@@ -83,13 +84,13 @@ class euler(telepot.helper.ChatHandler):
 				self.output_lang = self.CHINESE
 				self.translate(self.context)
 		else:
-			if re.match(u'[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]+', command) is not None:
+			if re.search(u'[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]+', command) is not None:
 				self.context = command
 				self.input_lang = self.KOREAN
 				self.language()
 			else:
 				self.output_lang = self.KOREAN
-				if re.match(u'[\u0061-\u007a\u0041-\u005a]+', command) is not None:
+				if re.search(u'[\u0061-\u007a\u0041-\u005a]+', command) is not None:
 					self.input_lang = self.ENGLISH
 				elif re.search(u'[\u2E80-\u2EFF\u31C0-\u31EF\u3200-\u32FF\u3400-\u4DBF\u4E00-\u9FBF\uF900-\uFAFF\u20000-\u2A6DF\u2F800-\u2FA1F]+', command) is not None:
 					if re.search(u'[\u3040-\u309F\u30A0-\u30FF]+', command) is not None:
@@ -102,8 +103,23 @@ class euler(telepot.helper.ChatHandler):
 		content_type, chat_type, chat_id= telepot.glance(msg)
 
 		if content_type is 'text':
-			self.handle_command(msg['text'])
-			return
+			if '/trans' in msg['text'].split():
+				if len(msg['text'].lstrip('/trans')) == 0:
+					self.sender.sendMessage("내용을 입력해주세요.")
+					self.menu()
+
+				else:
+					command = msg['text'].lstrip('/trans')
+					if re.search(u'[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]+', command) is not None:
+						self.output_lang = self.ENGLISH
+						self.input_lang = self.KOREAN
+						self.translate(command)
+					else:
+						self.handle_command(command)
+						return
+			else:
+				self.handle_command(msg['text'])
+				return
 
 	def on_close(self, exception):
 		pass
@@ -122,7 +138,6 @@ def getConfig(config):
 	TOKEN = config['common']['token']
 	client_id = config['common']['id']
 	client_secret = config['common']['key']
-
 
 config = parseConfig(CONFIG_FILE)
 
